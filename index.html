@@ -31,6 +31,16 @@
 			}
 		</script>
 
+		<style>
+			ul{ margin: 1em !important }
+			pre{ white-space: pre-wrap }
+			.fake-viewport {
+				width: 320px;
+				height: 480px;
+				background-color: #eee;
+			}
+		</style>
+
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
 		<![endif]-->
@@ -45,6 +55,7 @@
 				<section>
 					<h1>heart.css</h1>
 					<h2>layout pour web application</h2>
+					<hr>
 					<h3>Comment construire l'interface d'une application web mobile qui rivalise avec le natif</h3>
 					<p>
 						<small><a href="http://freddy03h.github.io">Freddy Harris</a> / <a href="http://twitter.com/harrisfreddy">@harrisfreddy</a></small>
@@ -66,24 +77,55 @@
 				</section>
 
 				<section>
-					<p>{screenshot/video appli facebook web vs natif}</p>
+					<video src="video/youtube-natif.mov" autoplay loop></video>
+					<h2>Youtube App native</h2>
 				</section>
 
 				<section>
-					<p>{screenshot/video appli avec fixed header}</p>
+					<video src="video/youtube-web.mov" autoplay loop></video>
+					<h2>Youtube Web</h2>
 				</section>
 
 				<section>
+					<video src="video/readability-web.mov" autoplay loop></video>
+					<h2>Readability Web</h2>
+				</section>
+
+				<!--<section>
 					<p>{schema document vs app}</p>
-				</section>
+				</section>-->
 
 				<section>
-					<p>{screenshot/video appli web avec iScroll}</p>
+					<video src="video/france3-web.mov" autoplay loop></video>
+					<h2>France 3 Web</h2>
 				</section>
 
+
 				<section>
-					<h1>css</h1>
+					<h1>tips and tricks</h1>
 					<!--<p>Petit état de l'art sur la technique : utiliser au maximum le CSS plutôt que du JS, présentation du principe de layout boundaries, optim css, pourquoi iScroll est inutile, etc.</p>-->
+				</section>
+
+				<section>
+					<h2>Position : fixed</h2>
+					<p>Utilisable sur mobile depuis iOS 5 et Android 4</p>
+				</section>
+
+				<section>
+					<h2>overflow-scrolling : touch</h2>
+					<p><code>overflow:auto</code> insuffisant ?</p>
+          			<pre><code data-trim contenteditable>
+#main {
+  -webkit-overflow-scrolling: touch
+}
+          			</code></pre>
+				</section>
+
+				<section>
+					<h2>meta viewport</h2>
+					<pre><code data-trim contenteditable>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+					</code></pre>
 				</section>
 
 				<section>
@@ -97,17 +139,116 @@
 
 				<section>
 					<h2>layout bondaries</h2>
-					<p><small><a href="http://wilsonpage.co.uk/introducing-layout-boundaries/">More info</a></small></p>
+					<p>Permet de limiter le reflow à un élément au lieu de toute la page</p>
+					<ul>
+						<li>Overflow explicite (scroll, auto ou hidden)</li>
+						<li>Ne pas être display : inline</li>
+						<li>Hauteur et largeur explicite</li>
+					</ul>
+					<p>Inapplicable sur un élément fluide</p>
 					<aside class="notes">
 						Avec du CSS on peu délimiter des limites aux layout/frame.
 						En delimitant un scope à nos layouts, une modification dans ce layout ne provoque qu'un 'reflow' partiel - moins couteux en perf
 						Mais nécéssite des conditions dratisques (hauteur et largeur fixe, position absolute, overflow not auto) -> inutilisable sur un élément fluide, à utiliser sur un composant à taille fixe mais pas pour un layout responsive
+						Besoin malgré tout de le minimiser
 					</aside>
+				</section>
+
+				<section>
+					<h2>Animations et transitions</h2>
+					<p>Animer avec transforms3d et opacity</p>
+					<p>Eviter au maximum d'animer les propriétés provoquant un reflow comme <code>height</code>, <code>width</code>, <code>top</code>, <code>left</code>, …</p>
+				</section>
+
+				<!--<section>
+					<h2>Problème iOS au scroll</h2>
+					<p>{{vidéo problème (avec Ionic)}}</p>
+					<p>Imbriquer <code>overflow-scrolling:touch</code></p>
+				</section>-->
+
+				<section>
+					<h2>Compatibilité</h2>
+					<p>Utilisation de Modernizr pour cibler les navigateurs modernes</p>
+
+					<p>Ma définition d'un navigateur moderne d'un point de vue CSS :</p>
+					<ul>
+						<li>CSS Animations</li>
+						<li>CSS Transform 3D</li>
+						<li>Position Fixed</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>fastclick</h2>
+					<p>Supprime les 300 ms de délais au click</p>
+					<pre><code data-trim contenteditable>
+window.addEventListener('load', function() {
+    new FastClick(document.body);
+}, false);
+					</code></pre>
 				</section>
 
 				<section>
 					<h1>heart.css</h1>
 					<!--<p>Présentation Heart.css et sa différence par rapport à des "concurrents" (Ionic, Bootstrap, etc)</p>-->
+					<a href="http://freddy03h.github.io/heart/" target="_blank">Documentation et examples</a>
+				</section>
+
+				<section>
+					<h2>Layer</h2>
+					<p>Contient la logique <code>position: absolute</code> et imbrication <code>overflow-scrolling:touch</code></p>
+					<pre><code data-trim contenteditable>
+						<div class="layer"></div>
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Layer scrollable</h2>
+					<p>Le wrap permet de forcer une hauteur à 100% même si le contenu ne remplit pas le layer.</p>
+					<pre><code data-trim contenteditable>
+<div class="layer">
+    <div class="layer-scrollable">
+        <div class="wrap">
+            …
+        </div>
+    </div>
+</div>
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Layer toggle</h2>
+					<p>Permet de gérer les états visible/invisible d'un layer avec une class. Pas besoin de jouer avec la propriété <code>display</code> en JavaScript.</p>
+					<pre><code data-trim contenteditable>
+<div class="layer">
+    …
+</div>    
+<div class="layer-toggle">
+    …
+</div>
+					</code></pre>
+					<pre><code data-trim contenteditable>
+<div class="layer">
+    …
+</div>    
+<div class="layer-toggle open">
+    …
+</div>
+					</code></pre>
+				</section>
+
+				<!--<section>
+					<h2>pull to resfresh</h2>
+					<p>{{demo}}</p>
+				</section>-->
+				<section>
+					<video src="video/web-starter-kit.mov" autoplay loop></video>
+					<h2>Web Starter Kit</h2>
+				</section>
+
+				<section>
+					<video src="video/heart-ios.mov" autoplay loop></video>
+					<p><a href="http://goo.gl/wKw047">http://goo.gl/wKw047</a></p>
 				</section>
 
 				
